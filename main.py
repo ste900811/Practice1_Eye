@@ -6,6 +6,19 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import cross_val_score
 
+# I understand your intention, but, I suggest to pass feature as input, not the globally shared one.
+# For each function, this should be perferred:
+"""
+def RunSomeClassifier(X, y):
+    for c in [0.001, 0.01, 0.1, 1, 10, 100, 1000]:
+        clf = ClassifierNameFromSklearn(C=c, other parameters...)
+        average_scores = np.mean(cross_val_score(clf, X, y, cv=10))
+        print("CLF-Short-Name:", "\t", c, "\t", round(average_scores,2)*100, "%")
+"""
+# Try to make variable names more relate to its function, e.g. X is a set of feature, that's right, but the correct meaning should be training data. 
+# You should just called it X, and label as y.
+
+
 def RunLogisticRegression(Label):
     for c in [0.001, 0.01, 0.1, 1, 10, 100, 1000]:
         clf = LogisticRegression(max_iter = 5000, C = c).fit(Feature, Label)
@@ -39,6 +52,10 @@ Sheetsnames = pd.ExcelFile("main_data.xlsx").sheet_names
 data = pd.read_excel('main_data.xlsx', sheet_name = 1, skiprows = lambda x: x in [0], index_col=0)  
 test = data.to_numpy()
 Feature = np.array([i[1:19] for i in test])
+
+# train, test sets are really need to name carefully.
+# I'll rename test as train_test, cause, this is the test for training
+# In the community, people usually use test to represent real test data, not the one from training
 
 for Labels in range(19, 26):
     print(data.keys()[Labels], "\t")
